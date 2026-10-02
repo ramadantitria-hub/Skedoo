@@ -1,0 +1,18 @@
+{
+  "name": "Skedoo - Pengatur Jadwal 2 Sahabat",
+  "short_name": "Skedoo",
+  "description": "Aplikasi Pengatur Jadwal 2 Sahabat & Teman Belajar dengan AI Gemini, Match Finder Waktu Luang, dan Notifikasi Lembut",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FAF8F5",
+  "theme_color": "#FAF8F5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

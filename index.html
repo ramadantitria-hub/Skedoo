@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Skedoo - Pengatur Jadwal 2 Sahabat (Duo Bestie Calendar)</title>
+  
+  <!-- SEO & Social Meta -->
+  <meta name="description" content="Skedoo - Aplikasi Pengatur Jadwal 2 Sahabat & Teman Belajar dengan Desain Soft Neumorphism Pastel, Anti-Malas AI Gemini Input, Match Finder Waktu Luang, dan Notifikasi Lembut.">
+  <meta name="theme-color" content="#FAF8F5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+  <!-- Favicon & PWA -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+  <link rel="apple-touch-icon" href="assets/logo.jpg">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Floating Toast Notification -->
+  <div id="toastNotice" class="toast-notice" role="alert" aria-live="polite">
+    <span id="toastIcon">✨</span>
+    <span id="toastMessage">Pesan notifikasi</span>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <img src="assets/logo.jpg" alt="Skedoo Logo" class="brand-logo" id="appLogoImg">
+        <div class="brand-info">
+          <h1>Skedoo <span class="highlight">Duo</span></h1>
+          <div class="brand-tagline">
+            <span>Pengatur Jadwal 2 Sahabat</span>
+            <span class="duo-badge" id="spaceCodeTag">🔑 SKD-204</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Audio Chime Preview -->
+        <button class="icon-btn" id="btnTestSound" title="Tes Nada Lembut Lofi (Web Audio API)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </button>
+
+        <!-- Phone Vibration Preview -->
+        <button class="icon-btn" id="btnTestVibrate" title="Tes Getar HP [200, 100, 200, 100, 400]">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            <path d="M2 8l1 1-1 1M2 14l1 1-1 1M22 8l-1 1 1 1M22 14l-1 1 1 1"></path>
+          </svg>
+        </button>
+
+        <!-- Settings & Tech Architecture -->
+        <button class="icon-btn" id="btnOpenSettings" title="Pengaturan & Skema Database">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- DUAL PERSPECTIVE SWITCHER (PDF Page 2) -->
+    <nav class="perspective-container" aria-label="Perspective Switcher">
+      <button class="perspective-btn active view-together" id="btnViewTogether" data-view="together">
+        <span>👥 Together (Berdua)</span>
+      </button>
+      <button class="perspective-btn view-user1" id="btnViewUser1" data-view="user1">
+        <img src="assets/avatar_dimas.jpg" alt="Dimas" class="avatar-mini">
+        <span>Dimas (Aku)</span>
+      </button>
+      <button class="perspective-btn view-user2" id="btnViewUser2" data-view="user2">
+        <img src="assets/avatar_alin.jpg" alt="Alin" class="avatar-mini">
+        <span>Alin (Bestie)</span>
+      </button>
+    </nav>
+
+    <!-- DUO SPACE STATUS CARD -->
+    <section class="duo-status-card" id="duoStatusCard">
+      <div class="duo-profiles">
+        <div class="duo-avatars-wrap">
+          <img src="assets/avatar_dimas.jpg" alt="Dimas" class="user-avatar-duo user1" id="avatarUser1Img">
+          <img src="assets/avatar_alin.jpg" alt="Alin" class="user-avatar-duo user2" id="avatarUser2Img">
+          <div class="duo-friend-badge">🤝</div>
+        </div>
+        <div class="duo-text-wrap">
+          <h3 id="duoSpaceName">Our Bestie Space 🤝</h3>
+          <p id="partnerStatusText">
+            <span class="status-dot pulse"></span>
+            <span>Alin: <strong>Lagi Free Time</strong> (Bisa diajak nongkrong / nugas)</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="duo-actions">
+        <!-- Colek / Quick Ping -->
+        <button class="pill-btn ping-action" id="btnSendLovePing" title="Sapa / Colek Sahabat">
+          <span>👋 Sapa Alin</span>
+        </button>
+        <!-- Change My Live Status -->
+        <button class="pill-btn" id="btnChangeStatus">
+          <span>Ubah Status</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- VIEW 1: AGENDA HARIAN (Daily Agenda) -->
+    <main class="view-content active" id="viewAgenda">
+      
+      <!-- Date Navigation & Carousel -->
+      <section class="agenda-controls">
+        <div class="date-selector-bar">
+          <div class="current-month-label">
+            <span id="labelMonthYear">Oktober 2026</span>
+          </div>
+          <div class="date-nav-buttons">
+            <button class="btn-date-nav" id="btnPrevDay" title="Hari Sebelumnya">‹</button>
+            <button class="pill-btn" id="btnToday">Hari Ini</button>
+            <button class="btn-date-nav" id="btnNextDay" title="Hari Berikutnya">›</button>
+          </div>
+        </div>
+
+        <!-- 7 Days Scrollable Carousel -->
+        <div class="week-dates-scroll" id="weekDatesScroll">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Category Filters -->
+        <div class="category-filters-scroll" id="categoryFiltersScroll">
+          <button class="filter-chip active" data-cat="all">Semua Kategori</button>
+          <button class="filter-chip" data-cat="Kuliah">🎓 Kuliah</button>
+          <button class="filter-chip" data-cat="Organisasi">🏛️ Organisasi</button>
+          <button class="filter-chip" data-cat="Project">💻 Project</button>
+          <button class="filter-chip" data-cat="Belajar">📖 Belajar</button>
+          <button class="filter-chip" data-cat="Free Time">☕ Free Time</button>
+        </div>
+      </section>
+
+      <!-- Match Finder Quick Banner on Agenda -->
+      <div class="match-finder-banner" id="agendaMatchBanner">
+        <div class="match-info-content">
+          <div class="match-icon-badge">✨</div>
+          <div class="match-text">
+            <h4>Match Finder Waktu Luang Berdua!</h4>
+            <p id="agendaMatchSummary">Hari ini kalian berdua punya waktu luang bersama jam <strong>15:00 - 18:00 (3 Jam)</strong></p>
+            <div class="match-slot-tag">Saran: Nongkrong santai atau nugas bareng di cafe ☕</div>
+          </div>
+        </div>
+        <button class="pill-btn primary" id="btnBookFreeSlot">
+          <span>+ Jadwalkan Nongkrong</span>
+        </button>
+      </div>
+
+      <!-- Schedule Cards List -->
+      <section class="schedules-list" id="schedulesList">
+        <!-- Rendered dynamically via JS -->
+      </section>
+
+    </main>
+
+    <!-- VIEW 2: KALENDER MINGGUAN (Weekly Timeline) -->
+    <section class="view-content" id="viewWeekly">
+      <div class="weekly-container">
+        <div class="weekly-header">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 800;">Timeline Mingguan 7 Hari</h2>
+            <p style="font-size: 0.82rem; color: var(--muted-grey);">Perbandingan jadwal Dimas vs Alin dalam satu pandangan</p>
+          </div>
+          <div class="weekly-legend">
+            <div class="legend-item"><span class="legend-color legend-user1"></span> Dimas</div>
+            <div class="legend-item"><span class="legend-color legend-user2"></span> Alin</div>
+            <div class="legend-item"><span class="legend-color legend-both"></span> Bersama 🤝</div>
+            <div class="legend-item"><span class="legend-color legend-free"></span> Free Time ✨</div>
+          </div>
+        </div>
+
+        <div class="weekly-grid" id="weeklyTimelineGrid">
+          <!-- 7 Columns generated dynamically via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: MATCH FINDER (Waktu Luang Berdua Analyzer) -->
+    <section class="view-content" id="viewMatchFinder">
+      <div class="match-finder-view">
+        <div class="match-header-card">
+          <div class="match-icon-badge" style="width: 56px; height: 56px; font-size: 1.8rem;">🤝</div>
+          <h2>Match Finder Waktu Luang Berdua</h2>
+          <p>Sistem Skedoo otomatis menganalisis jadwal Dimas dan Alin untuk menemukan slot jam ketika kalian berdua sama-sama kosong untuk nugas bareng, ngopi, atau nongkrong tanpa bentrok!</p>
+          <div style="display: flex; gap: 10px;">
+            <button class="pill-btn primary" id="btnRefreshMatch">
+              <span>Analisis Ulang Waktu Luang</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="match-slots-grid" id="matchSlotsContainer">
+          <!-- Generated dynamically via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: RUANG BERDUA & REALTIME PAIRING -->
+    <section class="view-content" id="viewDuoSpace">
+      <div class="duo-space-view">
+        <div class="space-card-grid">
+          
+          <!-- Pairing Info Card -->
+          <div class="duo-card-box">
+            <h3><span>🤝</span> Ruang Sahabat Aktif</h3>
+            <p style="font-size: 0.84rem; color: var(--muted-grey);">Bagikan 6-digit kode pairing ini kepada sahabatmu untuk menghubungkan jadwal secara realtime!</p>
+            
+            <div class="pairing-code-display">
+              <span style="font-size: 0.76rem; font-weight: 700; color: var(--muted-grey); text-transform: uppercase;">Kode Pairing Ruang Sahabat</span>
+              <div class="pairing-code-big" id="displayPairingCode">SKD-204</div>
+              <button class="pill-btn primary" id="btnCopyPairingCode">
+                <span>Salin Kode Pairing</span>
+              </button>
+            </div>
+
+            <div style="border-top: 1px dashed var(--border-subtle); padding-top: 14px;">
+              <label style="font-size: 0.8rem; font-weight: 700;">Gabung ke Ruang Sahabat Lain:</label>
+              <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <input type="text" class="form-input" id="inputJoinCode" placeholder="Contoh: SKD-999" style="text-transform: uppercase;">
+                <button class="pill-btn clay-blue" id="btnJoinSpace">Gabung</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Realtime Synchronization Test Card -->
+          <div class="duo-card-box">
+            <h3><span>⚡</span> Realtime Sync Simulator</h3>
+            <p style="font-size: 0.84rem; color: var(--muted-grey);">
+              Sistem menggunakan <code>BroadcastChannel</code> & <code>localStorage</code> untuk mensimulasikan WebSocket Supabase Realtime di browser.
+            </p>
+            <div style="background: var(--bg-cream); padding: 14px; border-radius: var(--radius-md); font-size: 0.82rem; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span>Status Koneksi Realtime:</span>
+                <span style="color: #10B981; font-weight: 700; display: flex; align-items: center; gap: 5px;">
+                  <span class="status-dot"></span> Terhubung Live
+                </span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span>User Aktif di Tab Ini:</span>
+                <span id="activePerspectiveLabel" style="font-weight: 700;">Together / Keduanya</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span>Channel:</span>
+                <code style="background: #FFF; padding: 2px 6px; border-radius: 4px;">skedoo_duo_space_realtime</code>
+              </div>
+            </div>
+
+            <button class="pill-btn" id="btnOpenSecondTab">
+              <span>🚀 Buka Tab Baru (Coba Sync 2 Orang)</span>
+            </button>
+          </div>
+
+          <!-- Quick Ping & Sapa Sahabat Card -->
+          <div class="duo-card-box">
+            <h3><span>💬</span> Quick Ping & Sapa Sahabat</h3>
+            <p style="font-size: 0.84rem; color: var(--muted-grey);">Kirim sapaan cepat ke sahabat tanpa buka chat WhatsApp!</p>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <button class="pill-btn ping-action ping-preset-btn" data-msg="Semangat nugas bro/sis! 💻">Semangat Nugas! 💻</button>
+              <button class="pill-btn ping-action ping-preset-btn" data-msg="Nongkrong ngopi yuk nanti sore! ☕">Ngopi Nanti Sore ☕</button>
+              <button class="pill-btn ping-action ping-preset-btn" data-msg="Lagi free gak? Nugas bareng kuy! 📚">Nugas Bareng Kuy 📚</button>
+              <button class="pill-btn ping-action ping-preset-btn" data-msg="Jangan lupa makan siang yaa 🥪">Jangan Lupa Makan 🥪</button>
+              <button class="pill-btn ping-action ping-preset-btn" data-msg="Udah kelar kelas, otw tempat biasa 🛵">Otw Tempat Biasa 🛵</button>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <input type="text" class="form-input" id="customLoveInput" placeholder="Ketik pesan cepat ke sahabat...">
+              <button class="pill-btn primary" id="btnSendCustomLove" style="margin-top: 8px; width: 100%; justify-content: center;">
+                Kirim Sapaan ke Sahabat
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 5: ARSITEKTUR & SKEMA SUPABASE (PDF Bab 4 & 5) -->
+    <section class="view-content" id="viewArchitecture">
+      <div class="duo-space-view">
+        <div class="match-header-card">
+          <div class="match-icon-badge" style="width: 50px; height: 50px; font-size: 1.5rem;">🏗️</div>
+          <h2>Master Plan & Skema Basis Data</h2>
+          <p>Struktur arsitektur lengkap sesuai dokumen master plan <code>skedoo.pdf</code> (Supabase PostgreSQL, Gemini 2.0 Flash AI, Web Audio & PWA).</p>
+        </div>
+
+        <div class="duo-card-box">
+          <h3><span>🐘</span> Skema Supabase PostgreSQL (DDL Asli PDF)</h3>
+          <pre class="tech-spec-box"><code>-- 1. Tabel Profil Pengguna
+create table profiles (
+  id uuid references auth.users on delete cascade primary key,
+  full_name text not null,
+  nickname text,
+  avatar_url text,
+  gcal_access_token text,
+  gcal_refresh_token text,
+  push_subscription jsonb, -- Untuk Web Push Notification
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 2. Tabel Duo Space (Ruang Berdua)
+create table duo_spaces (
+  id uuid default gen_random_uuid() primary key,
+  name text default 'Our Space',
+  pairing_code varchar(8) unique not null,
+  user1_id uuid references profiles(id) on delete set null,
+  user2_id uuid references profiles(id) on delete set null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 3. Kategori Jadwal (Kuliah, Organisasi, Project, Belajar, dll)
+create table categories (
+  id uuid default gen_random_uuid() primary key,
+  space_id uuid references duo_spaces(id) on delete cascade,
+  name text not null,
+  color_code text not null, -- e.g. #889C86, #7A919E
+  icon_name text default 'calendar'
+);
+
+-- 4. Tabel Jadwal (Schedules)
+create table schedules (
+  id uuid default gen_random_uuid() primary key,
+  space_id uuid references duo_spaces(id) on delete cascade not null,
+  user_id uuid references profiles(id) on delete cascade not null,
+  category_id uuid references categories(id) on delete set null,
+  title text not null,
+  description text,
+  location text,
+  start_time timestamp with time zone not null,
+  end_time timestamp with time zone not null,
+  is_recurring boolean default false,
+  recurrence_pattern jsonb, -- e.g. {"type": "weekly", "days": [1, 3]}
+  is_both boolean default false, -- Apakah ini agenda bersama?
+  gcal_event_id text, -- ID sinkronisasi Google Calendar
+  reminder_minutes integer default 15,
+  sound_tone text default 'lofi_gentle', -- Tipe melodi notifikasi
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Mengaktifkan Supabase Realtime untuk sinkronisasi otomatis antar 2 orang
+alter publication supabase_realtime add table schedules;</code></pre>
+        </div>
+
+        <div class="duo-card-box">
+          <h3><span>📅</span> Sinkronisasi Google Calendar & Ekspor .ICS</h3>
+          <p style="font-size: 0.84rem; color: var(--muted-grey);">Unduh jadwal Skedoo kamu dalam format kalender standar <code>.ics</code> yang bisa langsung diimpor ke Google Calendar, Apple Calendar, atau Outlook.</p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="pill-btn primary" id="btnExportICS">
+              <span>📥 Download File .ICS (Google Calendar)</span>
+            </button>
+            <button class="pill-btn clay-blue" id="btnSimulateGoogleSync">
+              <span>🔄 Sinkronisasi Akun Google Calendar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.app-container -->
+
+  <!-- ==========================================================================
+       BOTTOM FLOATING DOCK (iOS Style Floating Bar)
+       ========================================================================== -->
+  <nav class="bottom-floating-dock" aria-label="Bottom Navigation">
+    <button class="dock-item active" data-tab="agenda" id="dockBtnAgenda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <span>Agenda</span>
+    </button>
+
+    <button class="dock-item" data-tab="weekly" id="dockBtnWeekly">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6" y1="20" x2="6" y2="14"></line>
+      </svg>
+      <span>Timeline</span>
+    </button>
+
+    <!-- Central Quick Add Button (+) -->
+    <button class="dock-add-btn" id="dockBtnQuickAdd" title="Tambah Jadwal Anti-Malas (+)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+
+    <button class="dock-item" data-tab="matchfinder" id="dockBtnMatchFinder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Match</span>
+    </button>
+
+    <button class="dock-item" data-tab="duospace" id="dockBtnDuoSpace">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      <span>Ruang</span>
+    </button>
+  </nav>
+
+  <!-- ==========================================================================
+       MODAL 1: SOLUSI "ANTI-MALAS" FRICTIONLESS INPUT (PDF Bab 2)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalQuickAdd">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><span>✨</span> Tambah Jadwal Anti-Malas</h3>
+        <button class="modal-close-btn" id="btnCloseQuickAdd">✕</button>
+      </div>
+
+      <!-- Navigation Tabs: NLP, Vision, Templates, Manual -->
+      <div class="modal-tabs-nav">
+        <button class="modal-tab-btn active" data-modaltab="tabNlp">
+          <span>✍️ Ketik Bebas</span>
+        </button>
+        <button class="modal-tab-btn" data-modaltab="tabVision">
+          <span>📸 Scan / Upload KRS</span>
+        </button>
+        <button class="modal-tab-btn" data-modaltab="tabTemplates">
+          <span>⚡ 1-Tap Preset</span>
+        </button>
+        <button class="modal-tab-btn" data-modaltab="tabManual">
+          <span>📝 Form Manual</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: NATURAL LANGUAGE ONE-LINER (PDF Bab 2.1) -->
+      <div class="tab-pane active" id="tabNlp">
+        <p style="font-size: 0.83rem; color: var(--muted-grey);">
+          Ketik kalimat santai apa pun. AI otomatis mengekstrak judul, jam, tanggal, kategori, dan lokasi!
+        </p>
+
+        <div class="nlp-box-container">
+          <textarea class="nlp-textarea" id="nlpInputText" placeholder="Contoh: Besok ada kuis kalkulus jam 10 pagi, sore jam 4 rapat hmj di gedung c"></textarea>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; color: var(--muted-grey);">⚡ Bertenaga Gemini AI Natural Parser</span>
+            <button class="pill-btn primary" id="btnParseNlp">
+              <span>Ekstrak Jadwal ✨</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <span style="font-size: 0.74rem; font-weight: 700; color: var(--muted-grey); display: block; margin-bottom: 6px;">Coba Contoh Sekali Klik:</span>
+          <div class="nlp-examples">
+            <button class="nlp-chip" data-example="Besok ada kuis kalkulus jam 10 pagi, sore jam 4 rapat hmj di gedung c">
+              📝 Kuis Kalkulus & Rapat HMJ
+            </button>
+            <button class="nlp-chip" data-example="Nanti malam jam 8 nonton bioskop bareng Alin di Grand Mall">
+              🎬 Bioskop bareng Alin jam 8 malam
+            </button>
+            <button class="nlp-chip" data-example="Jumat jam 2 siang bimbingan skripsi dengan Prof Widodo di ruang dosen">
+              🎓 Bimbingan Skripsi Jumat jam 14:00
+            </button>
+            <button class="nlp-chip" data-example="Hari Minggu jam 7 pagi jogging di GBK bareng">
+              🏃 Jogging Minggu 07:00
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Preview Results -->
+        <div class="extracted-preview-box" id="nlpExtractedBox" style="display: none;">
+          <h4 style="font-size: 0.86rem; font-weight: 700; color: #4A6353; display: flex; align-items: center; gap: 6px;">
+            <span>✅</span> Draf Jadwal Terdeteksi:
+          </h4>
+          <div id="nlpExtractedItemsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+          <button class="pill-btn primary" id="btnSaveNlpDrafts" style="margin-top: 6px; width: 100%; justify-content: center;">
+            Simpan Semua ke Jadwal (+ Notifikasi Lembut)
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 2: AI SCREENSHOT / PHOTO PARSER (PDF Bab 2.2) -->
+      <div class="tab-pane" id="tabVision">
+        <p style="font-size: 0.83rem; color: var(--muted-grey);">
+          Unggah foto screenshot KRS perkuliahan, poster seminar, atau chat WhatsApp dosen. Gemini Vision langsung membaca gambar menjadi jadwal siap simpan.
+        </p>
+
+        <div class="upload-drop-zone" id="dropZone">
+          <input type="file" id="fileUploadInput" accept="image/*" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <div style="font-size: 0.88rem; font-weight: 700; color: var(--dark-slate);">Klik atau Seret Gambar ke Sini</div>
+          <div style="font-size: 0.74rem; color: var(--muted-grey);">Mendukung JPG, PNG, WebP (Screenshot KRS / Poster)</div>
+        </div>
+
+        <div>
+          <span style="font-size: 0.74rem; font-weight: 700; color: var(--muted-grey); display: block; margin-top: 8px; margin-bottom: 6px;">Atau Pilih Contoh Screenshot:</span>
+          <div class="preset-samples-row">
+            <div class="preset-sample-card" id="btnSampleKrs">
+              <img src="assets/sample_krs.jpg" alt="Sample KRS">
+              <div>
+                <div>Scan KRS Mahasiswa</div>
+                <span style="font-size: 0.68rem; color: var(--muted-grey);">3 Mata Kuliah Otomatis</span>
+              </div>
+            </div>
+            <div class="preset-sample-card" id="btnSampleSeminar">
+              <img src="assets/sample_seminar.jpg" alt="Sample Seminar">
+              <div>
+                <div>Poster Seminar AI</div>
+                <span style="font-size: 0.68rem; color: var(--muted-grey);">Sabtu 09:00 - 12:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vision Extracted Preview -->
+        <div class="extracted-preview-box" id="visionExtractedBox" style="display: none;">
+          <h4 style="font-size: 0.86rem; font-weight: 700; color: #4A6353; display: flex; align-items: center; gap: 6px;">
+            <span>📸</span> Hasil Pembacaan Gambar AI:
+          </h4>
+          <div id="visionExtractedItemsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+          <button class="pill-btn primary" id="btnSaveVisionDrafts" style="margin-top: 6px; width: 100%; justify-content: center;">
+            Simpan Hasil Scan ke Kalender
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 3: 1-TAP QUICK TEMPLATES (PDF Bab 2.3) -->
+      <div class="tab-pane" id="tabTemplates">
+        <p style="font-size: 0.83rem; color: var(--muted-grey);">
+          Pilih template cepat sekali tap untuk aktivitas harian tanpa perlu mengetik:
+        </p>
+
+        <div class="templates-grid">
+          <button class="template-btn" data-title="Nugas Mandiri" data-cat="Project" data-dur="120" data-owner="user1">
+            <span class="template-emoji">💻</span>
+            <span class="template-title">Nugas 2 Jam</span>
+            <span class="template-time">Durasi: 2 Jam (Fokus)</span>
+          </button>
+
+          <button class="template-btn" data-title="Kuliah Rutin Kampus" data-cat="Kuliah" data-dur="150" data-owner="user1">
+            <span class="template-emoji">🎓</span>
+            <span class="template-title">Kuliah Rutin</span>
+            <span class="template-time">Durasi: 2.5 Jam</span>
+          </button>
+
+          <button class="template-btn" data-title="Free Time / Me-Time Santai" data-cat="Free Time" data-dur="90" data-owner="user1">
+            <span class="template-emoji">☕</span>
+            <span class="template-title">Free Time</span>
+            <span class="template-time">Durasi: 1.5 Jam (Santai)</span>
+          </button>
+
+          <button class="template-btn" data-title="Gym & Olahraga Sehat" data-cat="Belajar" data-dur="75" data-owner="user1">
+            <span class="template-emoji">🏃</span>
+            <span class="template-title">Gym / Olahraga</span>
+            <span class="template-time">Durasi: 1 Jam 15 Menit</span>
+          </button>
+
+          <button class="template-btn" data-title="Nongkrong & Ngopi Bareng ☕" data-cat="Free Time" data-dur="150" data-owner="both">
+            <span class="template-emoji">☕</span>
+            <span class="template-title">Nongkrong Bareng</span>
+            <span class="template-time">Durasi: 2.5 Jam (Santai)</span>
+          </button>
+
+          <button class="template-btn" data-title="Bimbingan Skripsi" data-cat="Kuliah" data-dur="60" data-owner="user1">
+            <span class="template-emoji">📚</span>
+            <span class="template-title">Bimbingan</span>
+            <span class="template-time">Durasi: 1 Jam</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 4: MANUAL FORM -->
+      <div class="tab-pane" id="tabManual">
+        <form id="formManualSchedule" style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="form-group">
+            <label for="manualTitle">Judul Agenda</label>
+            <input type="text" class="form-input" id="manualTitle" placeholder="Contoh: Rapat Evaluasi Semester" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="manualDate">Tanggal</label>
+              <input type="date" class="form-input" id="manualDate" required>
+            </div>
+            <div class="form-group">
+              <label for="manualCategory">Kategori</label>
+              <select class="form-select" id="manualCategory">
+                <option value="Kuliah">Kuliah (Sage Green)</option>
+                <option value="Organisasi">Organisasi / Event (Dusty Blue)</option>
+                <option value="Project">Project / Deadline (Terracotta)</option>
+                <option value="Belajar">Belajar / Personal (Rosewood)</option>
+                <option value="Free Time">Free Time (Pastel Gold)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="manualStartTime">Jam Mulai</label>
+              <input type="time" class="form-input" id="manualStartTime" value="09:00" required>
+            </div>
+            <div class="form-group">
+              <label for="manualEndTime">Jam Selesai</label>
+              <input type="time" class="form-input" id="manualEndTime" value="11:00" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="manualOwner">Pemilik Jadwal</label>
+              <select class="form-select" id="manualOwner">
+                <option value="user1">Dimas (Aku)</option>
+                <option value="user2">Alin (Sahabat / Bestie)</option>
+                <option value="both">Agenda Bersama (Berdua) 🤝</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="manualReminder">Pengingat</label>
+              <select class="form-select" id="manualReminder">
+                <option value="15">15 Menit Sebelumnya</option>
+                <option value="30" selected>30 Menit Sebelumnya</option>
+                <option value="60">1 Jam Sebelumnya</option>
+                <option value="0">Tepat Waktu</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="manualLocation">Lokasi / Ruang (Opsional)</label>
+            <input type="text" class="form-input" id="manualLocation" placeholder="Contoh: Gedung C Lab 2 / Google Meet">
+          </div>
+
+          <div class="form-group">
+            <label for="manualDesc">Catatan Tambahan</label>
+            <input type="text" class="form-input" id="manualDesc" placeholder="Catatan kecil...">
+          </div>
+
+          <button type="submit" class="pill-btn primary" style="width: 100%; justify-content: center; margin-top: 8px;">
+            Simpan Jadwal Baru
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: UBAH STATUS PARTNER / AKU
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalChangeStatus">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3><span>🟢</span> Ubah Status Realtime</h3>
+        <button class="modal-close-btn" id="btnCloseChangeStatus">✕</button>
+      </div>
+
+      <p style="font-size: 0.83rem; color: var(--muted-grey); margin-bottom: 14px;">
+        Pilih status kamu sekarang agar sahabatmu tahu apakah kamu lagi senggang atau sibuk:
+      </p>
+
+      <div class="status-radio-group" id="statusOptionsList">
+        <div class="status-radio-option selected" data-status="Lagi Free Time" data-sub="Bisa diajak santai / ngobrol" data-color="#10B981">
+          <span style="font-size: 1.1rem;">☕</span>
+          <div>
+            <div>Lagi Free Time</div>
+            <span style="font-size: 0.68rem; color: var(--muted-grey);">Bisa diajak ngobrol</span>
+          </div>
+        </div>
+
+        <div class="status-radio-option" data-status="Sedang Kuliah" data-sub="Fokus kelas di kampus" data-color="#889C86">
+          <span style="font-size: 1.1rem;">🎓</span>
+          <div>
+            <div>Sedang Kuliah</div>
+            <span style="font-size: 0.68rem; color: var(--muted-grey);">Fokus kelas</span>
+          </div>
+        </div>
+
+        <div class="status-radio-option" data-status="Nugas & Fokus" data-sub="Jangan diganggu dulu yaa" data-color="#D8C3A5">
+          <span style="font-size: 1.1rem;">💻</span>
+          <div>
+            <div>Nugas & Fokus</div>
+            <span style="font-size: 0.68rem; color: var(--muted-grey);">Deep work session</span>
+          </div>
+        </div>
+
+        <div class="status-radio-option" data-status="Sedang Rapat" data-sub="Rapat organisasi / project" data-color="#7A919E">
+          <span style="font-size: 1.1rem;">🏛️</span>
+          <div>
+            <div>Sedang Rapat</div>
+            <span style="font-size: 0.68rem; color: var(--muted-grey);">Meeting aktif</span>
+          </div>
+        </div>
+
+        <div class="status-radio-option" data-status="Istirahat / Tidur" data-sub="Rehat sejenak zZz" data-color="#A0AEC0">
+          <span style="font-size: 1.1rem;">😴</span>
+          <div>
+            <div>Istirahat / Tidur</div>
+            <span style="font-size: 0.68rem; color: var(--muted-grey);">Rehat zZz</span>
+          </div>
+        </div>
+
+        <div class="status-radio-option" data-status="Jalan / On The Way" data-sub="Lagi di jalan 🛵" data-color="#E5B887">
+          <span style="font-size: 1.1rem;">🛵</span>
+          <div>
+            <div>On The Way</div>
+            <span style="font-size: 0.68rem; color: var(--muted-grey);">Lagi di perjalanan</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <button class="pill-btn primary" id="btnSaveStatusChange" style="width: 100%; justify-content: center;">
+          Perbarui Status
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: PENGATURAN, GEMINI API KEY & GOOGLE CALENDAR
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalSettings">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><span>⚙️</span> Pengaturan Skedoo</h3>
+        <button class="modal-close-btn" id="btnCloseSettings">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        
+        <!-- 1. Gemini API Key Configuration -->
+        <div class="nlp-box-container">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <label style="font-size: 0.84rem; font-weight: 700; color: var(--dark-slate); display: flex; align-items: center; gap: 6px;">
+              <span>🤖</span> Kunci API Google Gemini (Live 2.0 Flash)
+            </label>
+            <span id="geminiKeyBadge" style="font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-pill); background: var(--bg-cream); color: var(--muted-grey);">
+              Bawaan Cerdas
+            </span>
+          </div>
+          
+          <p style="font-size: 0.77rem; color: var(--muted-grey); line-height: 1.4;">
+            Skedoo sudah memiliki parser NLP pintar bawaan. Jika ingin menghubungkan langsung ke model live <strong>Google Gemini 2.0 Flash</strong>, dapatkan API Key gratis dari Google AI Studio:
+          </p>
+
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="font-size: 0.78rem; font-weight: 700; color: var(--dusty-blue); text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;">
+            🔑 Buka Google AI Studio untuk Ambil API Key Gratis (aistudio.google.com) ↗
+          </a>
+
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <input type="password" class="form-input" id="inputGeminiApiKey" placeholder="Tempel API Key di sini (AIzaSy...)">
+            <button class="pill-btn primary" id="btnSaveGeminiKey" style="white-space: nowrap;">
+              Simpan Key
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Google Calendar Integration Section -->
+        <div class="nlp-box-container" style="background: var(--dusty-blue-light); border-color: rgba(122, 145, 158, 0.3);">
+          <label style="font-size: 0.84rem; font-weight: 700; color: var(--dark-slate); display: flex; align-items: center; gap: 6px;">
+            <span>📅</span> Integrasi Google Calendar
+          </label>
+          <p style="font-size: 0.77rem; color: var(--muted-grey); line-height: 1.4;">
+            Hubungkan jadwal Skedoo ke Google Calendar (HP Android, iPhone, atau Web) dengan 2 cara:
+          </p>
+
+          <!-- Cara 1: File .ICS Instan -->
+          <div style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--dark-slate);">
+              Metode 1: Ekspor File .ICS (Sekali Klik & Langsung Masuk HP)
+            </div>
+            <p style="font-size: 0.74rem; color: var(--muted-grey);">
+              Unduh berkas <code>.ics</code>, lalu buka Google Calendar di peramban ➔ <strong>Setelan (⚙️)</strong> ➔ <strong>Impor & Ekspor</strong> ➔ Pilih berkas ini.
+            </p>
+            <button class="pill-btn primary" id="btnSettingsExportICS" style="align-self: flex-start;">
+              <span>📥 Download File .ICS Google Calendar</span>
+            </button>
+          </div>
+
+          <!-- Cara 2: OAuth 2.0 Client ID -->
+          <div style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--dark-slate);">
+              Metode 2: Sinkronisasi Otomatis Google Cloud (OAuth 2.0 API v3)
+            </div>
+            <p style="font-size: 0.74rem; color: var(--muted-grey);">
+              Sesuai Bab 5 PDF: Buat <em>OAuth Client ID</em> di <a href="https://console.cloud.google.com/" target="_blank" style="color: var(--dusty-blue); text-decoration: underline;">Google Cloud Console</a>, aktifkan <strong>Google Calendar API v3</strong>.
+            </p>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" class="form-input" id="inputGoogleClientId" placeholder="Contoh: xxxxx.apps.googleusercontent.com" style="font-size: 0.78rem;">
+              <button class="pill-btn clay-blue" id="btnConnectGoogleOAuth" style="white-space: nowrap;">
+                Hubungkan Akun
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Audio & Notification Settings -->
+        <div style="background: var(--bg-cream); padding: 14px; border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 10px;">
+          <label style="font-size: 0.8rem; font-weight: 700;">Pengaturan Efek & Suara</label>
+          <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; cursor: pointer;">
+            <span>Nada Lembut Lofi (Web Audio API)</span>
+            <input type="checkbox" id="checkEnableSound" checked>
+          </label>
+          <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; cursor: pointer;">
+            <span>Getaran Smartphone (Vibration API)</span>
+            <input type="checkbox" id="checkEnableVibration" checked>
+          </label>
+          <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; cursor: pointer;">
+            <span>Notifikasi Sistem Browser (Web Push)</span>
+            <input type="checkbox" id="checkEnableNotif" checked>
+          </label>
+        </div>
+
+        <!-- View PDF Specs shortcut -->
+        <button class="pill-btn primary" id="btnGoToArchitecture" style="justify-content: center;">
+          <span>Lihat Skema Supabase & Arsitektur Lengkap ➔</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
