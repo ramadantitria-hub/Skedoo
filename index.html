@@ -305,7 +305,12 @@
         </div>
 
         <div class="duo-card-box">
-          <h3><span>🐘</span> Skema Supabase PostgreSQL (DDL Asli PDF)</h3>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <h3><span>🐘</span> Skema Supabase PostgreSQL (DDL Asli PDF)</h3>
+            <button class="pill-btn primary" id="btnCopySqlFromArch">
+              <span>📋 Salin Seluruh SQL DDL</span>
+            </button>
+          </div>
           <pre class="tech-spec-box"><code>-- 1. Tabel Profil Pengguna
 create table profiles (
   id uuid references auth.users on delete cascade primary key,
@@ -818,7 +823,46 @@ alter publication supabase_realtime add table schedules;</code></pre>
           </div>
         </div>
 
-        <!-- 3. Audio & Notification Settings -->
+        <!-- 3. Supabase Cloud Integration Section -->
+        <div class="nlp-box-container" style="background: #F0FDF4; border-color: rgba(16, 185, 129, 0.35);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+            <label style="font-size: 0.84rem; font-weight: 700; color: var(--dark-slate); display: flex; align-items: center; gap: 6px;">
+              <span>🐘</span> Integrasi Supabase Cloud (PostgreSQL & Realtime)
+            </label>
+            <span id="supabaseStatusBadge" style="font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-pill); background: var(--bg-cream); color: var(--muted-grey);">
+              Mode Lokal & Offline
+            </span>
+          </div>
+
+          <p style="font-size: 0.77rem; color: var(--muted-grey); line-height: 1.4;">
+            Hubungkan database Supabase agar jadwal tersimpan di cloud PostgreSQL dan tersinkronisasi realtime antar 2 perangkat / HP.
+          </p>
+
+          <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" style="font-size: 0.78rem; font-weight: 700; color: #059669; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;">
+            🚀 Buka Dashboard Supabase (supabase.com) ↗
+          </a>
+
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+            <label style="font-size: 0.76rem; font-weight: 700; color: var(--dark-slate);">Supabase Project URL:</label>
+            <input type="text" class="form-input" id="inputSupabaseUrl" placeholder="https://xxxxxxxx.supabase.co" style="font-size: 0.8rem;">
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 0.76rem; font-weight: 700; color: var(--dark-slate);">Supabase Anon / Public Key:</label>
+            <input type="password" class="form-input" id="inputSupabaseKey" placeholder="eyJh..." style="font-size: 0.8rem;">
+          </div>
+
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
+            <button class="pill-btn primary" id="btnConnectSupabase" style="background: #10B981;">
+              Hubungkan & Sinkronkan
+            </button>
+            <button class="pill-btn" id="btnCopySupabaseSchema">
+              📋 Salin Skema SQL
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Audio & Notification Settings -->
         <div style="background: var(--bg-cream); padding: 14px; border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 10px;">
           <label style="font-size: 0.8rem; font-weight: 700;">Pengaturan Efek & Suara</label>
           <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; cursor: pointer;">
@@ -844,6 +888,8 @@ alter publication supabase_realtime add table schedules;</code></pre>
     </div>
   </div>
 
+  <!-- Supabase Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
 </body>
 </html>

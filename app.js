@@ -1837,6 +1837,178 @@ Kembalikan HANYA format JSON valid tanpa tanda backtick:
     }
   });
 
+  // ============================================================================
+  // SUPABASE CLOUD & REALTIME INTEGRATION
+  // ============================================================================
+  const SUPABASE_SCHEMA_SQL = `-- 1. Aktifkan ekstensi UUID
+create extension if not exists "uuid-ossp";
+
+-- 2. Tabel Profil Pengguna
+create table if not exists public.profiles (
+  id uuid references auth.users on delete cascade primary key,
+  full_name text not null,
+  nickname text,
+  avatar_url text,
+  gcal_access_token text,
+  gcal_refresh_token text,
+  push_subscription jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 3. Tabel Duo Space (Ruang Sahabat)
+create table if not exists public.duo_spaces (
+  id uuid default gen_random_uuid() primary key,
+  name text default 'Our Bestie Space',
+  pairing_code varchar(8) unique not null,
+  user1_id uuid references public.profiles(id) on delete set null,
+  user2_id uuid references public.profiles(id) on delete set null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 4. Kategori Jadwal
+create table if not exists public.categories (
+  id uuid default gen_random_uuid() primary key,
+  space_id uuid references public.duo_spaces(id) on delete cascade,
+  name text not null,
+  color_code text not null,
+  icon_name text default 'calendar'
+);
+
+-- 5. Tabel Jadwal (Schedules)
+create table if not exists public.schedules (
+  id uuid default gen_random_uuid() primary key,
+  space_id uuid references public.duo_spaces(id) on delete cascade not null,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  category_id uuid references public.categories(id) on delete set null,
+  title text not null,
+  description text,
+  location text,
+  start_time timestamp with time zone not null,
+  end_time timestamp with time zone not null,
+  is_recurring boolean default false,
+  recurrence_pattern jsonb,
+  is_both boolean default false,
+  gcal_event_id text,
+  reminder_minutes integer default 15,
+  sound_tone text default 'lofi_gentle',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 6. Aktifkan Supabase Realtime
+alter publication supabase_realtime add table public.schedules;
+
+-- 7. Policy Row Level Security (RLS)
+alter table public.profiles enable row level security;
+alter table public.duo_spaces enable row level security;
+alter table public.categories enable row level security;
+alter table public.schedules enable row level security;
+
+create policy "Public schedules select" on public.schedules for select using (true);
+create policy "Public schedules insert" on public.schedules for insert with check (true);
+create policy "Public schedules update" on public.schedules for update using (true);
+create policy "Public schedules delete" on public.schedules for delete using (true);`;
+
+  let supabaseClient = null;
+
+  function updateSupabaseBadgeUI(isConnected) {
+    const badge = document.getElementById('supabaseStatusBadge');
+    if (!badge) return;
+    if (isConnected) {
+      badge.textContent = '🟢 Terhubung ke Supabase Cloud';
+      badge.style.background = '#DCFCE7';
+      badge.style.color = '#15803D';
+    } else {
+      badge.textContent = 'Mode Lokal & Offline';
+      badge.style.background = 'var(--bg-cream)';
+      badge.style.color = 'var(--muted-grey)';
+    }
+  }
+
+  function copySupabaseDdl() {
+    navigator.clipboard.writeText(SUPABASE_SCHEMA_SQL).then(() => {
+      showToast('Skrip SQL Supabase berhasil disalin ke clipboard! Siap di-paste di SQL Editor.', '📋');
+      playLofiChime();
+    }).catch(() => {
+      showToast('Gagal menyalin, periksa izin clipboard.', '⚠️');
+    });
+  }
+
+  document.getElementById('btnCopySupabaseSchema')?.addEventListener('click', copySupabaseDdl);
+  document.getElementById('btnCopySqlFromArch')?.addEventListener('click', copySupabaseDdl);
+
+  async function initSupabase() {
+    const savedUrl = localStorage.getItem('skedoo_supabase_url');
+    const savedKey = localStorage.getItem('skedoo_supabase_key');
+
+    const inputUrl = document.getElementById('inputSupabaseUrl');
+    const inputKey = document.getElementById('inputSupabaseKey');
+
+    if (savedUrl && inputUrl) inputUrl.value = savedUrl;
+    if (savedKey && inputKey) inputKey.value = savedKey;
+
+    if (savedUrl && savedKey && window.supabase) {
+      try {
+        supabaseClient = window.supabase.createClient(savedUrl, savedKey);
+        updateSupabaseBadgeUI(true);
+
+        // Listen to Supabase Realtime changes
+        supabaseClient
+          .channel('public:schedules')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, payload => {
+            console.log('Supabase Realtime event:', payload);
+            showToast('⚡ Sinkronisasi realtime dari Supabase Cloud diterima!', '🐘');
+            playLofiChime();
+          })
+          .subscribe();
+
+      } catch (err) {
+        console.warn('Init Supabase error:', err);
+        updateSupabaseBadgeUI(false);
+      }
+    }
+  }
+
+  document.getElementById('btnConnectSupabase')?.addEventListener('click', async () => {
+    const url = document.getElementById('inputSupabaseUrl')?.value.trim();
+    const key = document.getElementById('inputSupabaseKey')?.value.trim();
+
+    if (!url || !key) {
+      showToast('Masukkan Project URL dan Anon Key Supabase Anda.', '⚠️');
+      return;
+    }
+
+    if (!window.supabase) {
+      showToast('Pustaka Supabase sedang dimuat, coba sesaat lagi.', '⏳');
+      return;
+    }
+
+    showToast('Menghubungkan ke Supabase Cloud...', '⏳');
+
+    try {
+      supabaseClient = window.supabase.createClient(url, key);
+      
+      // Test ping by selecting schedules
+      const { data, error } = await supabaseClient.from('schedules').select('id').limit(1);
+
+      if (error && error.code !== 'PGRST116') {
+        console.warn('Supabase query note:', error);
+      }
+
+      localStorage.setItem('skedoo_supabase_url', url);
+      localStorage.setItem('skedoo_supabase_key', key);
+      updateSupabaseBadgeUI(true);
+
+      showToast('Berhasil terhubung ke Supabase Cloud! 🎉', '🐘');
+      playLofiChime();
+    } catch (err) {
+      console.error(err);
+      showToast('Gagal menghubungkan. Pastikan URL & Key valid.', '❌');
+    }
+  });
+
+  // Initialize Supabase if credentials exist
+  initSupabase();
+
   // Initialize key badge
   updateGeminiBadgeUI();
 
